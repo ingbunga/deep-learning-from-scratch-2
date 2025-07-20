@@ -1,0 +1,56 @@
+import sys
+sys.path.append('..')
+import numpy as np
+from common.optimizer import SGD
+from dataset import spiral
+import matplotlib.pyplot as plt
+from two_layer_net import TwoLayerNet
+
+# 하이퍼 파라미터 설정
+max_epoch = 300
+batch_size = 30
+hidden_size = 10
+learning_rate = 1.0
+
+#
+x, t = spiral.load_data()
+model = TwoLayerNet(input_size=2, hidden_size=hidden_size, output_size=3)
+optimizer = SGD(lr=learning_rate)
+
+# 학습에 사용하는 변수
+data_size = len(x)
+max_iters = data_size // batch_size
+total_loss = 0
+loss_count = 0
+loss_list = []
+
+for epoch in range(max_epoch):
+    # 데이터 뒤섞기
+    idx = np.random.permutation(data_size)
+    x = x[idx]
+    t = t[idx]
+
+    for iters in range(max_iters):
+        batch_x = x[iters*batch_size:(iters+1)*batch_size]
+        batch_t = t[iters*batch_size:(iters+1)*batch_size]
+    
+        # 기울기를 구해 매개변수 갱신
+        loss = model.forward(batch_x, batch_t)
+        model.backward()
+        optimizer.update(model.params, model.grads)
+
+        total_loss += loss
+        loss_count += 1
+
+        # 정기적으로 학습 경과 출력
+        if (iters+1) % 10 == 0:
+            avg_loss = total_loss / loss_count
+            print(f'| 에폭 {epoch+1} | 반복 {iters+1} / {max_iters} | 손실 {avg_loss:.2f}')
+            loss_list.append(avg_loss)
+            total_loss, loss_count = 0, 0
+
+
+# 출력
+plt.plot(loss_list)
+plt.show()
+
