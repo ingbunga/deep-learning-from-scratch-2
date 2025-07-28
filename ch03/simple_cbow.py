@@ -1,7 +1,7 @@
 import sys
 sys.path.append('..')
 import numpy as np
-from common.layer import MatMul, SoftmaxWithLoss
+from common.layers import MatMul, SoftmaxWithLoss
 
 
 class SimpleCBOW:
