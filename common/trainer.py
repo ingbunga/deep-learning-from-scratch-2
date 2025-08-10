@@ -4,7 +4,7 @@ sys.path.append('..')
 import numpy
 import time
 import matplotlib.pyplot as plt
-import numpy as np
+from common.np import *
 from common.util import clip_grads
 
 
